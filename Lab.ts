@@ -1,40 +1,69 @@
-let age:number = 17;
-let idAdult:boolean = true;
-let a:number[] = [1,2,3];
-let a2:Array<number> = [1,2,3];
-
-let week1:string[] = ['mon','tue','wed'];
-//week1.push(3) => 3은 문자열이 아닌 정수기 때문에 에러
-let week2:Array<string> = ['mon','tue','wed'];
-
-//튜플
-let b:[string,number] = ['z',1];
-
-b[0].toLocaleLowerCase();
-//b[1].toLocaleLowerCase(); => 정수에는 해당 함수 사용 불가(타입 확인)
-
-//함수 자료형
-function Hello():void{
-    console.log('hi');
+// 인터페이스
+type userType = {
+    name : string;
+    age : number;
 }
 
-//never 자료형은 함수를 반환하거나,끝나지 않을때 사용
-function returnFunc():never{
-    throw new Hello();
+type Score = 'A'|'B'|'C'|'D';
+interface UserType {
+    name : string;
+    age : number;
+    gender? : number //(gender와 같이 (?)를 붙이면 선택가능)
+    readonly birthday : number //(readonly 키워드를 사용하면 재할당 불가)
+    [grade:number] : Score; //이와 같이하면 Key:vaule 형식 선언 가능
 }
 
-function Loop():never{
-    while(true){
-        console.log('Loop')
+let user1 = {
+    name : 'xx',
+    age : 30
+}
+// user1 : type 키워드로 객체를 지정해주면 안에 name,age 인스턴스 없이도 객체 선언 가능
+
+let user2 : UserType = {
+    name : 'yy',
+    age : 40,
+    birthday : 1012
+}
+// user2 : interface 키워드로 객체를 지정해주면 안에 name,age 인스턴스를 반드시 넣어야 객체 선언 가능
+
+interface Add {
+    (num1:number, num2:number): number;
+} // 함수도 정의 가능
+
+const add : Add = function(x,y){
+    return x + y;
+}
+
+interface Car {
+    color : string
+    wheels : number
+    start() : void
+}
+
+interface Toy {
+    name : string
+    color : number
+}
+
+class bmw implements Car {
+    wheels = 4;
+    color;
+    //생성자
+    constructor(c:string){
+        this.color = c;
+    }
+    start(){
+        console.log('붕붕')
     }
 }
 
-enum OS{
-    Window  = 11,
-    Ios = 'Iphone',
-    Andoroid = 12
-} 
-// 정수일 경우에는 양방향 Mapping 가능 
+const b = new bmw('빨강');
+b.start();
 
-let c:null = null;
-let d:undefined = undefined;
+interface Benz extends Car{
+    door : number;
+    stop() : void;
+}
+//이렇게 인터페이스 확장도 가능
+
+//interface ToyCar extends Car,Toy {} => 다중 상속도 가능하지만 같은 이름의 다른 자료형의 요소가 있으면 상속불가
