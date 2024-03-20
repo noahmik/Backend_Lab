@@ -1,69 +1,44 @@
-// 인터페이스
-type userType = {
+// 함수
+
+function hello(name?:string){
+    return `Hello, ${name || 'World'}`; // 선택적 매개변수, 매개변수 없으면 World 출력
+}
+
+function hello2(name = "World"){
+    return `Hello, ${name}`; // 이렇게 하면 매개변수의 기본값이 World;
+}
+
+function hello3(name: string,age?: number){
+    return "Hello,World";
+} //선택적 매개변수가 필수 매개변수보다 앞에 오면 안됨
+
+const result = hello();
+const result2 = hello2();
+const result3 = hello3('태영',13);
+
+function add(...nums : number[]){ //이런 함수에서는 자료형을 정수 배열로
+    return nums.reduce((result,num) => result+num, 0) 
+}
+
+add(1,2,3);
+add(1,2,3,4,5);
+
+interface User {
     name : string;
     age : number;
 }
 
-type Score = 'A'|'B'|'C'|'D';
-interface UserType {
-    name : string;
-    age : number;
-    gender? : number //(gender와 같이 (?)를 붙이면 선택가능)
-    readonly birthday : number //(readonly 키워드를 사용하면 재할당 불가)
-    [grade:number] : Score; //이와 같이하면 Key:vaule 형식 선언 가능
-}
-
-let user1 = {
-    name : 'xx',
-    age : 30
-}
-// user1 : type 키워드로 객체를 지정해주면 안에 name,age 인스턴스 없이도 객체 선언 가능
-
-let user2 : UserType = {
-    name : 'yy',
-    age : 40,
-    birthday : 1012
-}
-// user2 : interface 키워드로 객체를 지정해주면 안에 name,age 인스턴스를 반드시 넣어야 객체 선언 가능
-
-interface Add {
-    (num1:number, num2:number): number;
-} // 함수도 정의 가능
-
-const add : Add = function(x,y){
-    return x + y;
-}
-
-interface Car {
-    color : string
-    wheels : number
-    start() : void
-}
-
-interface Toy {
-    name : string
-    color : number
-}
-
-class bmw implements Car {
-    wheels = 4;
-    color;
-    //생성자
-    constructor(c:string){
-        this.color = c;
+//return 타입이 확실하지 않을땐 이렇게 메서드 오버로딩을 해줘야함
+function join(name : string, age : string) : string;
+function join(name : string, age : string) : User;
+function join(name : string, age : number | string) : User | string {
+    if(typeof age === "number"){
+        return {
+            name,
+            age
+        }
+     } else {
+            return "나이는 숫자로 ㅎㅎ;;"
+        }
     }
-    start(){
-        console.log('붕붕')
-    }
-}
 
-const b = new bmw('빨강');
-b.start();
-
-interface Benz extends Car{
-    door : number;
-    stop() : void;
-}
-//이렇게 인터페이스 확장도 가능
-
-//interface ToyCar extends Car,Toy {} => 다중 상속도 가능하지만 같은 이름의 다른 자료형의 요소가 있으면 상속불가
