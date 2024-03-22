@@ -1,44 +1,64 @@
-// 함수
+// 리터럴 타입 => 고정값
 
-function hello(name?:string){
-    return `Hello, ${name || 'World'}`; // 선택적 매개변수, 매개변수 없으면 World 출력
-}
+const userName1 = "Bob"; //불변
+let userName2 = "Tom" //가변
 
-function hello2(name = "World"){
-    return `Hello, ${name}`; // 이렇게 하면 매개변수의 기본값이 World;
-}
+//userName2 = 10 => ts에서 let은 가변이긴 하지만 처음 선언한 타입으로만 바꿀 수 있음
 
-function hello3(name: string,age?: number){
-    return "Hello,World";
-} //선택적 매개변수가 필수 매개변수보다 앞에 오면 안됨
-
-const result = hello();
-const result2 = hello2();
-const result3 = hello3('태영',13);
-
-function add(...nums : number[]){ //이런 함수에서는 자료형을 정수 배열로
-    return nums.reduce((result,num) => result+num, 0) 
-}
-
-add(1,2,3);
-add(1,2,3,4,5);
+type Job = "police" | "developer" | "teacher"; // 문자열 리터럴 타입
 
 interface User {
     name : string;
-    age : number;
+    job : Job;
 }
 
-//return 타입이 확실하지 않을땐 이렇게 메서드 오버로딩을 해줘야함
-function join(name : string, age : string) : string;
-function join(name : string, age : string) : User;
-function join(name : string, age : number | string) : User | string {
-    if(typeof age === "number"){
-        return {
-            name,
-            age
-        }
-     } else {
-            return "나이는 숫자로 ㅎㅎ;;"
-        }
-    }
+const user: User = {
+    name : "Bob",
+    job : "developer"
+}
 
+interface HighSchoolStudent {
+    name : number | string;
+    grade: 1 | 2 | 3;  //유니온타입(ts or연산자)
+}
+
+//유니온 타입
+interface Car {
+    name : "Car",
+    color : string;
+    start(): void;  
+}
+
+interface Mobile {
+    name: "mobile";
+    color: string;
+    call(): void;
+}
+
+function getGift(gift: Car | Mobile) {
+    console.log(gift.color)
+    if(gift.name === "Car"){
+        gift.start();
+    } else {
+        gift.call()
+    }
+}
+
+//교차타입(Intersection Types)
+interface Car2 {
+    name : string;
+    start(): void;  
+}
+
+interface Toy {
+    name: string;
+    color: string;
+    price: number;
+}
+
+const toyCar: Toy & Car2 = {
+    name: "타요",
+    start() {},
+    color : "blue",
+    price : 1000
+}
