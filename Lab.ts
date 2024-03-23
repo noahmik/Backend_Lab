@@ -1,64 +1,33 @@
-// 리터럴 타입 => 고정값
-
-const userName1 = "Bob"; //불변
-let userName2 = "Tom" //가변
-
-//userName2 = 10 => ts에서 let은 가변이긴 하지만 처음 선언한 타입으로만 바꿀 수 있음
-
-type Job = "police" | "developer" | "teacher"; // 문자열 리터럴 타입
-
-interface User {
-    name : string;
-    job : Job;
-}
-
-const user: User = {
-    name : "Bob",
-    job : "developer"
-}
-
-interface HighSchoolStudent {
-    name : number | string;
-    grade: 1 | 2 | 3;  //유니온타입(ts or연산자)
-}
-
-//유니온 타입
-interface Car {
-    name : "Car",
-    color : string;
-    start(): void;  
-}
-
-interface Mobile {
-    name: "mobile";
+//클래스(class)
+abstract class Car {
+    readonly name: string = "car"; 
+    //name 앞에 #name 혹은 private 키워드를 붙이면 다른 class에서 호출 불가
+    //protected 키워드를 붙이면 자식 클래스에선 호출이 되지만 클래스인스턴스(z4.name)과 같은 걸론 접근불가
+    //public 키워드는 모두 가능
     color: string;
-    call(): void;
+    static wheels = 4;
+    constructor(color:string, name){
+        this.color = color;
+    }
+    start(){
+        console.log("start");
+    }
+    abstract doSomething():void; //추상메서드
 }
 
-function getGift(gift: Car | Mobile) {
-    console.log(gift.color)
-    if(gift.name === "Car"){
-        gift.start();
-    } else {
-        gift.call()
+class Bmw extends Car {
+    constructor(color:string, name){
+        super(color, name);
+    }
+    showName(){
+        console.log(super.name);
+    }
+    doSomething(){
+        alert(3); //자식 클래스에서 구현
     }
 }
 
-//교차타입(Intersection Types)
-interface Car2 {
-    name : string;
-    start(): void;  
-}
-
-interface Toy {
-    name: string;
-    color: string;
-    price: number;
-}
-
-const toyCar: Toy & Car2 = {
-    name: "타요",
-    start() {},
-    color : "blue",
-    price : 1000
-}
+const z4 = new Bmw("black","taeyoung"); //readonly에선 이렇게 변경
+console.log(z4.name);
+console.log(Car.wheels); //static 키워드에서는 Class명으로 호출 
+// z4.name = "blue" => readonly 키워드 내에서 사용 불가
