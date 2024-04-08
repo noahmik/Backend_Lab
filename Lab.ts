@@ -1,66 +1,76 @@
-// Generic
-//타입을 T로만 넣어두고 이후에 선언할때 정함
-function getSize<T>(arr: T[]):number{
-    return arr.length;
-}
-
-const arr1 = [1,2,3];
-getSize<number>(arr1);
-
-const arr2 = ['a','b','c'];
-getSize<string>(arr2);
-
-const arr3 = [false,true,true];
-getSize<boolean>(arr3);
-
-const arr4 = [{},{name: 2},{a : "3"}];
-getSize<object>(arr4);
-
-
-interface Mobile<T> {
-    name : string;
-    price : number;
-    option : T;
-}
-
-const m1 : Mobile<object> = {
-    name : "s1",
-    price : 10000,
-    option : {
-        color : "red",
-        coupon : false
-    }
-}
-
-const m2 : Mobile<string> = {
-    name : "s1",
-    price : 10000,
-    option : "good"
-}
-
+//유틸리티 타입 
+// Partial<T>
 
 interface User {
-    name: string,
-    age: number
+    id : number;
+    name : string;
+    age : number;
+    gender : "m" | "f";
 }
 
-interface Car {
-    name: string,
-    color: string
+//Partial 타입을 사용하면 요소를 모두 들고오지 않아도 됨
+let admin: Partial<User> = {
+    id : 1,
+    name: "Bob"
+};
+
+interface User2 {
+    id : number;
+    name : string;
+    age? : number;
 }
 
-interface Book {
-    price : number
+//Required 타입에서는 모든 요수가 필수임
+let admin2: Required<User2> = {
+    id : 1,
+    name : "Bob"
 }
 
-const user:User = {name:"a", age:10};
-const car:Car = {name:"bmw",color:"red"};
-const book:Book = {price:10000};
-
-function showName<T extends {name : string}>(data : T): string {
-    return data.name;
+let admin3: Readonly<User2> = {
+    id : 4,
+    name : "Bob"
 }
 
-showName(user);
-showName(car);
-//showName(book); => book이 객체 내에 없음
+//Readonly 타입에서는 재할당 불가
+admin3.id = 5;
+
+type Grade = "1" | "2" | "3" | "4";
+type Score = "A" | "B" | "C" | "D";
+
+//레코드 타입은 이렇게 Key,Value를 지정가능
+const score: Record<Grade,Score> = {
+    1 : "A",
+    2 : "C",
+    3 : "D",
+    4 : "B"
+}
+
+interface User2 {
+    id : number;
+    name : string;
+    age? : number;
+}
+
+//Pick 타입은 인터페이스의 몇 요소만 강제화 가능
+const admin4 : Pick<User2, "id" | "name"> = {
+    id : 4,
+    name : "chunsik"
+}
+
+interface User2 {
+    id: number;
+    name: string;
+    age?: number; 
+}
+
+//Omit키워드 pick과 반대로 해당 요소를 빼고 구현함
+const admin5: Omit<User2, "id" | "name"> = {
+    age: 30 
+};
+
+// Exclude를 사용하여 id와 name을 제외한 타입 정의
+type AdminType = Exclude<keyof User2, "id" | "name">;
+
+//NonNullable 타입은 null과 undefinded를 제외함
+type T1 = string | null | undefined | void;
+type T2 = NonNullable<T1>;
